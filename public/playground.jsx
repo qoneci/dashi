@@ -56,7 +56,7 @@ var ResultBlock = React.createClass({
             buildTime: {this.props.buildTime}
           </div>
           <div>
-            buildResult: {this.props.buildResult}
+            result: {this.props.buildResult}
           </div>
         </div>
       </Col>
@@ -69,14 +69,14 @@ var testStatus = function(pass, fail, buildResult) {
   if (fail === 0 && pass >= 1) {
     return classString += ' dashi-card-pass';
   }
-  else if (pass === 0) {
+  else if (pass === 0 && !(buildResult === 'ABORTED') || (buildResult === 'FAILURE')) {
     return classString += ' dashi-card-fail'
+  }
+  else if (fail >= 1) {
+    return classString += ' dashi-card-warn';
   }
   else if (buildResult === 'ABORTED' || 'FAILURE') {
     return classString += ' dashi-card-grey';
-  }
-  else if (fail > 0) {
-    return classString += ' dashi-card-warn';
   }
   else {
     return classString += ' dashi-card-grey';
