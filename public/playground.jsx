@@ -94,7 +94,6 @@ var ResultList = React.createClass({
       const navInstance = (
         <div className='container-fluid'>
           {resultNodes}
-          {resultNodes}
           <TimerBlock />
         </div>
       );
