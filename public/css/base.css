@@ -1,0 +1,116 @@
+body {
+  background: #fff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
+  padding: 30px;
+}
+
+a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-family: "Bitstream Vera Sans Mono", Consolas, Courier, monospace;
+  font-size: 12px;
+  margin: 0 2px;
+  padding: 0px 5px;
+}
+
+h1, h2, h3, h4 {
+  font-weight: bold;
+  margin: 0 0 15px;
+  padding: 0;
+}
+
+h1 {
+  border-bottom: 1px solid #ddd;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin: 0 0 15px;
+  padding: 0;
+}
+
+h2 {
+  border-bottom: 1px solid #eee;
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+h4 {
+  font-size: 1.2em;
+}
+
+p, ul {
+  margin: 15px 0;
+}
+
+ul {
+  padding-left: 30px;
+}
+
+.dashi-card-text {
+  padding: 16px;
+  position: center;
+}
+.dashi-card-text-timer {
+  padding: 16px;
+  position: center;
+  font-size: 3.0em;
+}
+.dashi-card-pass {
+  background-color: #5cb85c;
+}
+.dashi-card-fail {
+  background-color: #d9534f;
+}
+.dashi-card-warn {
+  background-color: #f0ad4e;
+}
+.dashi-card-grey{
+  background-color: gray;
+}
+.dashi-card-white{
+  background-color: #fff;
+}
+.dashi-card-size-small {
+  height: 150px;
+  width: 150px;
+}
+.dashi-card-size-mid {
+  height: 200px;
+  width: 200px;
+}
+.dashi-card-size-big {
+  height: 250px;
+  width: 250px;
+}
+.dashi-card-size {
+  float: left;
+  font-size: 14px;
+  margin-bottom: 3px;
+  margin-left: 3px;
+  margin-right: 3px;
+  margin-top: 3px;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  position: relative;
+  border-color: gray;
+}
+
+.dashi-main-container {
+  margin: 0 auto;
+}
