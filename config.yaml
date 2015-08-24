@@ -11,4 +11,5 @@ jenkins:
         - {"job": "Selenium-Frontend-Desktop-mainSite", "short": "Desktop mainSite"}
         - {"job": "Selenium-Frontend-Desktop-Integration", "short": "Desktop Integration"}
         - {"job": "Selenium-Frontend-Desktop-Flash-Games-Python", "short": "Desktop Flash"}
+        - {"job": "API-tests", "short": "API tests"}
 

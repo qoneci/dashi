@@ -64,18 +64,18 @@ var ResultBlock = React.createClass({
   }
 });
 
-var testStatus = function(pass, fail, buildResult) {
+var testStatus = function(buildResult) {
   classString = 'dashi-card-size dashi-card-size-mid'
-  if (fail === 0 && pass >= 1) {
+  if (buildResult === 'SUCCESS') {
     return classString += ' dashi-card-pass';
   }
-  else if (pass === 0 && !(buildResult === 'ABORTED') || (buildResult === 'FAILURE')) {
+  else if (buildResult === 'FAILURE') {
     return classString += ' dashi-card-fail'
   }
-  else if (fail >= 1) {
+  else if (buildResult === 'UNSTABLE') {
     return classString += ' dashi-card-warn';
   }
-  else if (buildResult === 'ABORTED' || 'FAILURE') {
+  else if (buildResult === 'ABORTED') {
     return classString += ' dashi-card-grey';
   }
   else {
@@ -86,7 +86,7 @@ var testStatus = function(pass, fail, buildResult) {
 var ResultList = React.createClass({
     render: function() {
       var resultNodes = this.props.data.map(function (s) {
-        var testResult = testStatus(s.pass, s.fail, s.result);
+        var testResult = testStatus(s.result);
         return (
           <ResultBlock name={s.name} pass={s.pass} fail={s.fail} build={s.build} colCss={testResult} buildTime={s.buildDurationInSec} buildResult={s.result}/>
         );

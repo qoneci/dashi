@@ -83,8 +83,12 @@ class testResults():
                     totalCount = 0
                     failCount = 0
                 else:
-                    totalCount = data['actions'][-1]['totalCount']
-                    failCount = data['actions'][-1]['failCount']
+                    try:
+                        totalCount = data['actions'][-1]['totalCount']
+                        failCount = data['actions'][-1]['failCount']
+                    except KeyError:
+                        totalCount = 0
+                        failCount = 0
 
                 passCount = (totalCount - failCount)
                 self.data.append(
@@ -98,6 +102,7 @@ class testResults():
                     }
                 )
         return self.data
+
 
 result = testResults().getLastResult()
 print json.dumps(result, indent=4, sort_keys=True)
