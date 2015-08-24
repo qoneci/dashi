@@ -55,19 +55,25 @@ var ResultBlock = React.createClass({
           <div>
             buildTime: {this.props.buildTime}
           </div>
+          <div>
+            buildResult: {this.props.buildResult}
+          </div>
         </div>
       </Col>
     );
   }
 });
 
-var testStatus = function(pass, fail) {
+var testStatus = function(pass, fail, buildResult) {
   classString = 'dashi-card-size dashi-card-size-mid'
-  if (fail === 0) {
+  if (fail === 0 && pass >= 1) {
     return classString += ' dashi-card-pass';
   }
   else if (pass === 0) {
     return classString += ' dashi-card-fail'
+  }
+  else if (buildResult === 'ABORTED' || 'FAILURE') {
+    return classString += ' dashi-card-grey';
   }
   else if (fail > 0) {
     return classString += ' dashi-card-warn';
@@ -80,9 +86,9 @@ var testStatus = function(pass, fail) {
 var ResultList = React.createClass({
     render: function() {
       var resultNodes = this.props.data.map(function (s) {
-        var testResult = testStatus(s.pass, s.fail)
+        var testResult = testStatus(s.pass, s.fail, s.result);
         return (
-          <ResultBlock name={s.name} pass={s.pass} fail={s.fail} build={s.build} colCss={testResult} buildTime={s.buildDurationInSec} />
+          <ResultBlock name={s.name} pass={s.pass} fail={s.fail} build={s.build} colCss={testResult} buildTime={s.buildDurationInSec} buildResult={s.result}/>
         );
       });
       const navInstance = (

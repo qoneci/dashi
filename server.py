@@ -46,9 +46,8 @@ class testResults():
         buildId = self.lastBuild(job, 'number')
         while buildWithResult is False:
             buildData = self.getBuildValues(job, buildId)
-            result = buildData.get('result')
             building = buildData.get('building')
-            if not (building or (result == 'ABORTED') or (result == 'FAILURE')):
+            if not building:
                 buildWithResult = True
             else:
                 buildId = buildId - 1
@@ -69,10 +68,17 @@ class testResults():
             data = self.lastCompleteBuild(job)
             if data:
                 # print json.dumps(data, indent=4, sort_keys=True)
-                totalCount = data['actions'][-1]['totalCount']
-                failCount = data['actions'][-1]['failCount']
                 buildNum = data['number']
+                buildResult = data['result']
                 buildDurationInSec = (data['duration'] / 1000)
+
+                if ((buildResult == 'ABORTED') or (buildResult == 'FAILURE')):
+                    totalCount = 0
+                    failCount = 0
+                else:
+                    totalCount = data['actions'][-1]['totalCount']
+                    failCount = data['actions'][-1]['failCount']
+
                 passCount = (totalCount - failCount)
                 self.data.append(
                     {
@@ -80,6 +86,7 @@ class testResults():
                         "pass": passCount,
                         "fail": failCount,
                         "build": buildNum,
+                        "result": buildResult,
                         "buildDurationInSec": str(datetime.timedelta(seconds=buildDurationInSec))
                     }
                 )
