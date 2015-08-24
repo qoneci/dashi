@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import json
 import yaml
+import datetime
 import requests
 from flask import Flask, Response, request
 
@@ -79,7 +80,7 @@ class testResults():
                         "pass": passCount,
                         "fail": failCount,
                         "build": buildNum,
-                        "buildDurationInSec": buildDurationInSec
+                        "buildDurationInSec": str(datetime.timedelta(seconds=buildDurationInSec))
                     }
                 )
         return self.data
