@@ -3,3 +3,4 @@ node_modules
 .DS_Store
 react-bootstrap.js
 react-bootstrap.min.js
+config.yaml
