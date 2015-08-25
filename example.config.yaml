@@ -1,0 +1,9 @@
+# YAML
+
+jenkins:
+    host: "<hostname-or-ip>"
+    user: "<username>"
+    token: "<userToken>"
+    jobs:
+        - {"job": "<jenkins-job-name>", "short": "<shorter job description>"}
+
