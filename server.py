@@ -136,12 +136,15 @@ def redis_connect():
 
 def redis_get(redis_key):
     r = redis.Redis(connection_pool=redis_pool)
-    data_ttl = int(r.ttl(redis_key))
-    if data_ttl >= 5:
-        data = r.get(redis_key)
-        string_to_dict = literal_eval(data)
-        return string_to_dict
-    else:
+    try:
+        data_ttl = int(r.ttl(redis_key))
+        if data_ttl >= 5:
+            data = r.get(redis_key)
+            string_to_dict = literal_eval(data)
+            return string_to_dict
+        else:
+            return False
+    except TypeError:
         return False
 
 
