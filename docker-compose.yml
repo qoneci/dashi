@@ -1,0 +1,12 @@
+web:
+  image: dashi:web
+  ports:
+   - "3000:3000"
+  links:
+      - redis:redis
+nginx:
+    image: dashi:nginx
+    ports:
+      - "80:80"
+redis:
+  image: redis
