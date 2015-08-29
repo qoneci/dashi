@@ -10,3 +10,6 @@ redis:
     host: "<hostname-or-ip>"
     port: 6979 
     db: 0
+server:
+    port: 3000
+    debug: True

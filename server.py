@@ -10,14 +10,14 @@ from flask import Flask, Response, request
 
 app = Flask(__name__, static_url_path='', static_folder='public')
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
+configFile = file('config.yaml', 'r')
+config = yaml.load(configFile)
 
 
 class testResults():
 
     def __init__(self):
         requests.packages.urllib3.disable_warnings()
-        configFile = file('config.yaml', 'r')
-        config = yaml.load(configFile)
         self.host = config['jenkins']['host']
         self.user = config['jenkins']['user']
         self.token = config['jenkins']['token']
@@ -114,22 +114,42 @@ def result_handler():
 
 def run_web_service():
     app.run(
-        port=3000,
-        debug=True,
+        port=config['server']['port'],
+        debug=bool(config['server']['port']),
         threaded=True,
         host='0.0.0.0'
     )
 
 
+def redis_connect():
+    pool = redis.ConnectionPool(
+        host=config['redis']['host'],
+        port=int(config['redis']['port']),
+        db=int(config['redis']['db'])
+    )
+    return pool
+
+
 def run_jenkins_poller():
+    pool = redis_connect()
+    r = redis.Redis(connection_pool=pool)
     while True:
+        result = testResults().getLastResult()
+        r.set('jenkins-result', result)
         sleep(5)
 
 if __name__ == '__main__':
-    web = multiprocessing.Process(name='web_service', target=run_web_service)
+    poller = multiprocessing.Process(
+        name='poller_service',
+        target=run_jenkins_poller
+    )
+    poller.daemon = False
+
+    web = multiprocessing.Process(
+        name='web_service',
+        target=run_web_service
+    )
     web.daemon = False
-    poller = multiprocessing.Process(name='poller_service', target=run_jenkins_poller)
-    poller.daemon = True
 
     web.start()
     poller.start()
