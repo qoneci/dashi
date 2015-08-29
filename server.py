@@ -3,6 +3,9 @@ import json
 import yaml
 import datetime
 import requests
+import redis
+import multiprocessing
+from time import sleep
 from flask import Flask, Response, request
 
 app = Flask(__name__, static_url_path='', static_folder='public')
@@ -108,10 +111,25 @@ def result_handler():
         )
         return resp
 
-if __name__ == '__main__':
+
+def run_web_service():
     app.run(
         port=3000,
         debug=True,
         threaded=True,
         host='0.0.0.0'
     )
+
+
+def run_jenkins_poller():
+    while True:
+        sleep(5)
+
+if __name__ == '__main__':
+    web = multiprocessing.Process(name='web_service', target=run_web_service)
+    web.daemon = False
+    poller = multiprocessing.Process(name='poller_service', target=run_jenkins_poller)
+    poller.daemon = True
+
+    web.start()
+    poller.start()

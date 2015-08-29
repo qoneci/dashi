@@ -6,4 +6,7 @@ jenkins:
     token: "<userToken>"
     jobs:
         - {"job": "<jenkins-job-name>", "short": "<shorter job description>"}
-
+redis:
+    host: "<hostname-or-ip>"
+    port: 6979 
+    db: 0
