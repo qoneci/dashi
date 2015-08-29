@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 import json
 import yaml
-import datetime
 import requests
 import redis
 import multiprocessing
-from ast import literal_eval
 from time import sleep
+from ast import literal_eval
+from datetime import timedelta
 from flask import Flask, Response, request
 
 app = Flask(__name__, static_url_path='', static_folder='public')
@@ -95,7 +95,7 @@ class testResults():
                         "fail": failCount,
                         "build": buildNum,
                         "result": buildResult,
-                        "buildDurationInSec": str(datetime.timedelta(seconds=buildDurationInSec))
+                        "buildDurationInSec": str(timedelta(seconds=buildDurationInSec))
                     }
                 )
         return self.data
