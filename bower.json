@@ -1,0 +1,21 @@
+{
+  "name": "dashi",
+  "version": "0.0.0",
+  "homepage": "https://github.com/gutro/dashi",
+  "authors": [
+    "Alexander Brandstedt <alexanderbrandstedt@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "react": "~0.13.3",
+    "react-bootstrap": "~0.25.1"
+  }
+}
