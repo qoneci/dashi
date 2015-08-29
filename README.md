@@ -7,7 +7,7 @@ install
 $ pip install -r requirements.txt
 ```
 
-copy the example config to config.yaml and configure it to to your jenkins
+copy the example config to config.yaml and configure it to to your jenkins. point to a redis host
 ```bash
 $ cp example.config.yaml config.yaml
 ```

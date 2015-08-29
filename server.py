@@ -1,20 +1,24 @@
 #!/usr/bin/env python
 import json
 import yaml
-import datetime
 import requests
+import redis
+import multiprocessing
+from time import sleep
+from ast import literal_eval
+from datetime import timedelta
 from flask import Flask, Response, request
 
 app = Flask(__name__, static_url_path='', static_folder='public')
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
+configFile = file('config.yaml', 'r')
+config = yaml.load(configFile)
 
 
 class testResults():
 
     def __init__(self):
         requests.packages.urllib3.disable_warnings()
-        configFile = file('config.yaml', 'r')
-        config = yaml.load(configFile)
         self.host = config['jenkins']['host']
         self.user = config['jenkins']['user']
         self.token = config['jenkins']['token']
@@ -91,7 +95,7 @@ class testResults():
                         "fail": failCount,
                         "build": buildNum,
                         "result": buildResult,
-                        "buildDurationInSec": str(datetime.timedelta(seconds=buildDurationInSec))
+                        "buildDurationInSec": str(timedelta(seconds=buildDurationInSec))
                     }
                 )
         return self.data
@@ -100,7 +104,10 @@ class testResults():
 @app.route('/api/result', methods=['GET'])
 def result_handler():
     if request.method == 'GET':
-        result = testResults().getLastResult()
+        result = redis_get('jenkins-result')
+        if not result:
+            result = testResults().getLastResult()
+
         resp = Response(
             json.dumps(result),
             mimetype='application/json',
@@ -108,10 +115,60 @@ def result_handler():
         )
         return resp
 
-if __name__ == '__main__':
+
+def run_web_service():
     app.run(
-        port=3000,
-        debug=True,
+        port=config['server']['port'],
+        debug=bool(config['server']['port']),
         threaded=True,
         host='0.0.0.0'
     )
+
+
+def redis_connect():
+    pool = redis.ConnectionPool(
+        host=config['redis']['host'],
+        port=int(config['redis']['port']),
+        db=int(config['redis']['db'])
+    )
+    return pool
+
+
+def redis_get(redis_key):
+    r = redis.Redis(connection_pool=redis_pool)
+    try:
+        data_ttl = int(r.ttl(redis_key))
+        if data_ttl >= 5:
+            data = r.get(redis_key)
+            string_to_dict = literal_eval(data)
+            return string_to_dict
+        else:
+            return False
+    except TypeError:
+        return False
+
+
+def run_jenkins_poller():
+    r = redis.Redis(connection_pool=redis_pool)
+    while True:
+        result = testResults().getLastResult()
+        r.set('jenkins-result', result, ex=40)
+        sleep(10)
+
+
+if __name__ == '__main__':
+    redis_pool = redis_connect()
+    poller = multiprocessing.Process(
+        name='poller_service',
+        target=run_jenkins_poller
+    )
+    poller.daemon = False
+
+    web = multiprocessing.Process(
+        name='web_service',
+        target=run_web_service
+    )
+    web.daemon = False
+
+    web.start()
+    poller.start()
