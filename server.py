@@ -149,8 +149,8 @@ def run_jenkins_poller():
     r = redis.Redis(connection_pool=redis_pool)
     while True:
         result = testResults().getLastResult()
-        r.set('jenkins-result', result, ex=30)
-        sleep(5)
+        r.set('jenkins-result', result, ex=40)
+        sleep(10)
 
 
 if __name__ == '__main__':
