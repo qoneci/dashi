@@ -41,7 +41,9 @@ var ResultBlock = React.createClass({
       <Col className={this.props.colCss}>
         <div className='dashi-card-text'>
           <div>
-            {this.props.name}
+            <b>
+              {this.props.name}
+            </b>
           </div>
           <div>
             pass: {this.props.pass}
@@ -134,6 +136,6 @@ var ResultContainer = React.createClass({
 });
 
 React.render(
-  <ResultContainer url="/api/result" pollInterval={20000} />,
+  <ResultContainer url="/api/result" pollInterval={15000} />,
   document.getElementById('content')
 );
