@@ -130,15 +130,26 @@ def redis_connect():
     return pool
 
 
+def redis_get(redis_key):
+    r = redis.Redis(connection_pool=redis_pool)
+    data_ttl = int(r.ttl(redis_key))
+    if data_ttl > 5:
+        data = r.get(redis_key)
+        return data
+    else:
+        return False
+
+
 def run_jenkins_poller():
-    pool = redis_connect()
-    r = redis.Redis(connection_pool=pool)
+    r = redis.Redis(connection_pool=redis_pool)
     while True:
         result = testResults().getLastResult()
-        r.set('jenkins-result', result)
+        r.set('jenkins-result', result, ex=30)
         sleep(5)
 
+
 if __name__ == '__main__':
+    redis_pool = redis_connect()
     poller = multiprocessing.Process(
         name='poller_service',
         target=run_jenkins_poller
