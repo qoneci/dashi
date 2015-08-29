@@ -8,7 +8,7 @@ jenkins:
         - {"job": "<jenkins-job-name>", "short": "<shorter job description>"}
 redis:
     host: "<hostname-or-ip>"
-    port: 6979 
+    port: 6379 
     db: 0
 server:
     port: 3000
