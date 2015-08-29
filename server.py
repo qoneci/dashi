@@ -5,6 +5,7 @@ import datetime
 import requests
 import redis
 import multiprocessing
+from ast import literal_eval
 from time import sleep
 from flask import Flask, Response, request
 
@@ -103,7 +104,10 @@ class testResults():
 @app.route('/api/result', methods=['GET'])
 def result_handler():
     if request.method == 'GET':
-        result = testResults().getLastResult()
+        result = redis_get('jenkins-result')
+        if not result:
+            result = testResults().getLastResult()
+
         resp = Response(
             json.dumps(result),
             mimetype='application/json',
@@ -133,9 +137,10 @@ def redis_connect():
 def redis_get(redis_key):
     r = redis.Redis(connection_pool=redis_pool)
     data_ttl = int(r.ttl(redis_key))
-    if data_ttl > 5:
+    if data_ttl >= 5:
         data = r.get(redis_key)
-        return data
+        string_to_dict = literal_eval(data)
+        return string_to_dict
     else:
         return False
 
