@@ -106,6 +106,7 @@ def result_handler():
     if request.method == 'GET':
         result = redis_get('jenkins-result')
         if not result:
+            print 'no redis data found!'
             result = testResults().getLastResult()
 
         resp = Response(
@@ -151,9 +152,10 @@ def redis_get(redis_key):
 def run_jenkins_poller():
     r = redis.Redis(connection_pool=redis_pool)
     while True:
+        sleep(10)
+        print 'jenkins poll'
         result = testResults().getLastResult()
         r.set('jenkins-result', result, ex=40)
-        sleep(10)
 
 
 if __name__ == '__main__':
