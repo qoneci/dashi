@@ -1,4 +1,5 @@
 FROM debian:8.1
+MAINTAINER Alexander Brandstedt
 
 RUN apt-get update -y && apt-get upgrade -y && \
     apt-get install -y \

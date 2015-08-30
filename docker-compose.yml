@@ -6,3 +6,13 @@ web:
       - redis
 redis:
   image: redis
+haproxy:
+  image: tutum/haproxy
+  links:
+    - web
+  environment:
+    - BACKEND_PORT=3000
+  ports:
+      - "80:80"
+
+
