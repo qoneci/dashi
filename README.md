@@ -18,7 +18,7 @@ $ cp example.config.yaml config.yaml
 run from shell
 --------------
 ```bash
-python server.py
+$ python server.py
 ```
 
 you can access the webUI on http://\<host\>:3000
@@ -35,5 +35,5 @@ docker run
 ----------
 this will start a docker stack with the server.py in a container, redis and a haproxy
 ```bash
-docker-compose up -d
+$ docker-compose up -d
 ```
