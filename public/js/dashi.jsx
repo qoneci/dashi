@@ -60,6 +60,9 @@ var ResultBlock = React.createClass({
           <div>
             result: {this.props.buildResult}
           </div>
+          <div>
+            <a href="{this.props.buildLink}">link</a>
+          </div>
         </div>
       </Col>
     );
@@ -90,7 +93,14 @@ var ResultList = React.createClass({
       var resultNodes = this.props.data.map(function (s) {
         var testResult = testStatus(s.result);
         return (
-          <ResultBlock name={s.name} pass={s.pass} fail={s.fail} build={s.build} colCss={testResult} buildTime={s.buildDurationInSec} buildResult={s.result}/>
+          <ResultBlock name={s.name}
+                       pass={s.pass}
+                       fail={s.fail}
+                       build={s.build}
+                       colCss={testResult}
+                       buildTime={s.buildDurationInSec}
+                       buildResult={s.result}
+                       buildLink={s.buildLink}/>
         );
       });
       const navInstance = (

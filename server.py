@@ -7,6 +7,7 @@ import multiprocessing
 from time import sleep
 from ast import literal_eval
 from datetime import timedelta
+from urlparse import urlparse
 from flask import Flask, Response, request
 
 app = Flask(__name__, static_url_path='', static_folder='public')
@@ -27,7 +28,10 @@ class testResults():
 
     def lastBuild(self, job, value):
         found = False
-        url = 'https://%s:%s@%s/job/%s/lastBuild/api/json' % (self.user, self.token, self.host, job)
+        url = 'https://%s:%s@%s/job/%s/lastBuild/api/json' % (self.user,
+                                                              self.token,
+                                                              self.host,
+                                                              job)
         req = requests.get(url, verify=False)
         if req.status_code == 200:
             data = json.loads(req.text)
@@ -35,7 +39,11 @@ class testResults():
         return found
 
     def getBuildValues(self, job, buildId):
-        url = 'https://%s:%s@%s/job/%s/%s/api/json' % (self.user, self.token, self.host, job, buildId)
+        url = 'https://%s:%s@%s/job/%s/%s/api/json' % (self.user,
+                                                       self.token,
+                                                       self.host,
+                                                       job,
+                                                       buildId)
         req = requests.get(url, verify=False)
         if req.status_code == 200:
             data = json.loads(req.text)
@@ -57,7 +65,11 @@ class testResults():
                 buildId = buildId - 1
 
         if buildWithResult:
-            url = 'https://%s:%s@%s/job/%s/%s/api/json' % (self.user, self.token, self.host, job, buildId)
+            url = 'https://%s:%s@%s/job/%s/%s/api/json' % (self.user,
+                                                           self.token,
+                                                           self.host,
+                                                           job,
+                                                           buildId)
             req = requests.get(url, verify=False)
             if req.status_code == 200:
                 data = json.loads(req.text)
@@ -71,7 +83,8 @@ class testResults():
             shortName = jobData.get('short')
             data = self.lastCompleteBuild(job)
             if data:
-                # print json.dumps(data, indent=4, sort_keys=True)
+                buildUrl = urlparse(data['url'])
+                buildLink = '%s://%s%s' % (buildUrl.scheme, self.host, buildUrl.path)
                 buildNum = data['number']
                 buildResult = data['result']
                 buildDurationInSec = (data['duration'] / 1000)
@@ -95,6 +108,7 @@ class testResults():
                         "fail": failCount,
                         "build": buildNum,
                         "result": buildResult,
+                        "buildLink": buildLink,
                         "buildDurationInSec": str(timedelta(seconds=buildDurationInSec))
                     }
                 )
