@@ -61,7 +61,7 @@ var ResultBlock = React.createClass({
             result: {this.props.buildResult}
           </div>
           <div>
-            <a href="{this.props.buildLink}">link</a>
+            <a href={this.props.buildLink}>link</a>
           </div>
         </div>
       </Col>
