@@ -6,6 +6,7 @@ RUN apt-get update -y && apt-get upgrade -y && \
         nodejs-legacy \
         gcc \
         npm \
+        git \
         libyaml-dev \
         python-setuptools \
         python-pip \
