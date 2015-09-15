@@ -90,8 +90,12 @@ class testResults():
                 buildDurationInSec = (data['duration'] / 1000)
 
                 if ((buildResult == 'ABORTED') or (buildResult == 'FAILURE')):
-                    totalCount = 0
-                    failCount = 0
+                    try:
+                        totalCount = data['actions'][-1]['totalCount']
+                        failCount = data['actions'][-1]['failCount']
+                    except KeyError:
+                        totalCount = 0
+                        failCount = 0
                 else:
                     try:
                         totalCount = data['actions'][-1]['totalCount']
