@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 import requests
 import json
+import redis
 from urlparse import urlparse
 from datetime import timedelta
+from ast import literal_eval
+from time import sleep
 
 
-class jenkinsResults(object):
+class jenkinsData(object):
 
     def __init__(self, config):
         requests.packages.urllib3.disable_warnings()
@@ -107,3 +110,59 @@ class jenkinsResults(object):
                     }
                 )
         return self.data
+
+
+def redisPool(config):
+    pool = redis.ConnectionPool(
+        host=config['redis']['host'],
+        port=int(config['redis']['port']),
+        db=int(config['redis']['db'])
+    )
+    return pool
+
+
+class redisPoller(object):
+
+    def __init__(self, config, redis_pool):
+        self.config = config
+        self.pool = redis_pool
+
+    def get(self, redis_data_key):
+        _redis = redis.Redis(
+            connection_pool=self.pool
+        )
+        try:
+            data_ttl = int(_redis.ttl(redis_data_key))
+            if data_ttl >= 5:
+                data = _redis.get(redis_data_key)
+                string_to_dict = literal_eval(data)
+                return string_to_dict
+            else:
+                return False
+        except TypeError:
+            return False
+
+
+class jobPoller(object):
+
+    def __init__(self, config, redis_pool):
+        self.config = config
+        self.redis_expire_time = int(self.config['redis']['expire_time'])
+        self.jenkins_poll_interval = int(self.config['jenkins']['poll_interval'])
+        self.pool = redis_pool
+
+    def jenkins(self):
+        _redis = redis.Redis(
+            connection_pool=self.pool
+        )
+        while True:
+            sleep(self.jenkins_poll_interval)
+            print 'jenkins poll'
+            _jenkins_data = jenkinsData(self.config)
+            result = _jenkins_data.getLastResult()
+            _redis.set(
+                'jenkins-result',
+                result,
+                ex=self.redis_expire_time
+            )
+            print 'added data to redis'
