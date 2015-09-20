@@ -48,7 +48,7 @@ if __name__ == '__main__':
     poller.start()
 
     web = multiprocessing.Process(
-        name='web_service',
+        name='app_service',
         target=app_service
     )
     web.daemon = False
