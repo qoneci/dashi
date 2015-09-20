@@ -165,4 +165,3 @@ class jobPoller(object):
                 result,
                 ex=self.redis_expire_time
             )
-            print 'added data to redis'
