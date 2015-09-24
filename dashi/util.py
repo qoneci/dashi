@@ -31,6 +31,19 @@ class jenkinsData(object):
         else:
             return False
 
+    def getTestReport(self, job, buildNum):
+        url = 'https://%s:%s@%s/job/%s/%s/testReport/api/json' % (self.user,
+                                                                  self.token,
+                                                                  self.host,
+                                                                  job,
+                                                                  buildNum)
+        req = requests.get(url, verify=False)
+        if req.status_code == 200:
+            data = json.loads(req.text)
+            return data
+        else:
+            return False
+
     def getLastResult(self):
         for jobData in self.jobs:
             job = jobData.get('job')
@@ -42,24 +55,24 @@ class jenkinsData(object):
                 buildNum = data['number']
                 buildResult = data['result']
                 buildDurationInSec = (data['duration'] / 1000)
+                buildTestReuslt = self.getTestReport(job, buildNum)
                 if ((buildResult == 'ABORTED') or (buildResult == 'FAILURE')):
-                    try:
-                        totalCount = data['actions'][-2]['totalCount']
-                        failCount = data['actions'][-2]['failCount']
-                    except KeyError:
-                        print 'failed to get data'
-                        totalCount = 0
+                    if buildTestReuslt:
+                        passCount = buildTestReuslt['passCount']
+                        failCount = buildTestReuslt['failCount']
+                    else:
+                        print 'no test result found'
+                        passCount = 0
                         failCount = 0
                 else:
-                    try:
-                        totalCount = data['actions'][-2]['totalCount']
-                        failCount = data['actions'][-2]['failCount']
-                    except KeyError:
-                        print 'failed to get data'
-                        totalCount = 0
+                    if buildTestReuslt:
+                        passCount = buildTestReuslt['passCount']
+                        failCount = buildTestReuslt['failCount']
+                    else:
+                        print 'no test result found'
+                        passCount = 0
                         failCount = 0
 
-                passCount = (totalCount - failCount)
                 self.data.append(
                     {
                         "name": shortName,
