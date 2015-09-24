@@ -19,21 +19,6 @@ class jenkinsData(object):
         self.jobs = config['jenkins']['jobs']
         self.data = []
 
-    def getBuildValues(self, job, buildId):
-        url = 'https://%s:%s@%s/job/%s/%s/api/json' % (self.user,
-                                                       self.token,
-                                                       self.host,
-                                                       job,
-                                                       buildId)
-        req = requests.get(url, verify=False)
-        if req.status_code == 200:
-            data = json.loads(req.text)
-            result = data['result']
-            building = data['building']
-            return {'result': result, 'building': building}
-        else:
-            return False
-
     def lastCompleteBuild(self, job):
         url = 'https://%s:%s@%s/job/%s/lastCompletedBuild/api/json' % (self.user,
                                                                        self.token,
