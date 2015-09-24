@@ -19,18 +19,6 @@ class jenkinsData(object):
         self.jobs = config['jenkins']['jobs']
         self.data = []
 
-    def lastBuild(self, job, value):
-        found = False
-        url = 'https://%s:%s@%s/job/%s/lastBuild/api/json' % (self.user,
-                                                              self.token,
-                                                              self.host,
-                                                              job)
-        req = requests.get(url, verify=False)
-        if req.status_code == 200:
-            data = json.loads(req.text)
-            found = data[value]
-        return found
-
     def getBuildValues(self, job, buildId):
         url = 'https://%s:%s@%s/job/%s/%s/api/json' % (self.user,
                                                        self.token,
@@ -47,26 +35,14 @@ class jenkinsData(object):
             return False
 
     def lastCompleteBuild(self, job):
-        buildWithResult = False
-        buildId = self.lastBuild(job, 'number')
-        while buildWithResult is False:
-            buildData = self.getBuildValues(job, buildId)
-            building = buildData.get('building')
-            if not building:
-                buildWithResult = True
-            else:
-                buildId = buildId - 1
-
-        if buildWithResult:
-            url = 'https://%s:%s@%s/job/%s/%s/api/json' % (self.user,
-                                                           self.token,
-                                                           self.host,
-                                                           job,
-                                                           buildId)
-            req = requests.get(url, verify=False)
-            if req.status_code == 200:
-                data = json.loads(req.text)
-                return data
+        url = 'https://%s:%s@%s/job/%s/lastCompletedBuild/api/json' % (self.user,
+                                                                       self.token,
+                                                                       self.host,
+                                                                       job)
+        req = requests.get(url, verify=False)
+        if req.status_code == 200:
+            data = json.loads(req.text)
+            return data
         else:
             return False
 
@@ -81,19 +57,20 @@ class jenkinsData(object):
                 buildNum = data['number']
                 buildResult = data['result']
                 buildDurationInSec = (data['duration'] / 1000)
-
                 if ((buildResult == 'ABORTED') or (buildResult == 'FAILURE')):
                     try:
-                        totalCount = data['actions'][-1]['totalCount']
-                        failCount = data['actions'][-1]['failCount']
+                        totalCount = data['actions'][-2]['totalCount']
+                        failCount = data['actions'][-2]['failCount']
                     except KeyError:
+                        print 'failed to get data'
                         totalCount = 0
                         failCount = 0
                 else:
                     try:
-                        totalCount = data['actions'][-1]['totalCount']
-                        failCount = data['actions'][-1]['failCount']
+                        totalCount = data['actions'][-2]['totalCount']
+                        failCount = data['actions'][-2]['failCount']
                     except KeyError:
+                        print 'failed to get data'
                         totalCount = 0
                         failCount = 0
 
