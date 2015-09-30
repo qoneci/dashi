@@ -1,0 +1,3 @@
+- api based json config.
+    - POST (upload new config) should have json and format validation
+    - GET (return current config) 
