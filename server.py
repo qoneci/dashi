@@ -7,7 +7,7 @@ from dashi.util import jenkinsData, redisPoller, jobPoller, redisPool
 
 app = Flask(__name__, static_url_path='', static_folder='public')
 app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
-configFile = file('config.yaml', 'r')
+configFile = file('config.yml', 'r')
 config = yaml.load(configFile)
 
 

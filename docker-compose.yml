@@ -1,9 +1,12 @@
 web:
   image: dashi:web
   ports:
-   - "3000:3000"
+    - "3000:3000"
   links:
-      - redis
+    - redis
+  volumes:
+    - ./config.yml:/opt/web/config.yml
+
 redis:
   image: redis
 haproxy:
@@ -13,6 +16,6 @@ haproxy:
   environment:
     - BACKEND_PORT=3000
   ports:
-      - "80:80"
+    - "80:80"
 
 

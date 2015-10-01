@@ -12,7 +12,7 @@ $ bower install
 
 copy the example config to config.yaml and configure it to to your jenkins. point to a redis host
 ```bash
-$ cp example.config.yaml config.yaml
+$ cp example.config.yml config.yml
 ```
 
 run from shell
