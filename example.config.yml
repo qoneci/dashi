@@ -5,6 +5,7 @@ jenkins:
     user: "<username>"
     token: "<userToken>"
     poll_interval: 10
+    transport: 'http'
     jobs:
         - {"job": "<jenkins-job-name>", "short": "<shorter job description>"}
 redis:
