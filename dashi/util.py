@@ -17,13 +17,15 @@ class jenkinsData(object):
         self.user = config['jenkins']['user']
         self.token = config['jenkins']['token']
         self.jobs = config['jenkins']['jobs']
+        self.transport = config['jenkins']['transport']
         self.data = []
 
     def lastCompleteBuild(self, job):
-        url = 'https://%s:%s@%s/job/%s/lastCompletedBuild/api/json' % (self.user,
-                                                                       self.token,
-                                                                       self.host,
-                                                                       job)
+        url = '%s://%s:%s@%s/job/%s/lastCompletedBuild/api/json' % (self.transport,
+                                                                    self.user,
+                                                                    self.token,
+                                                                    self.host,
+                                                                    job)
         req = requests.get(url, verify=False)
         if req.status_code == 200:
             data = json.loads(req.text)
@@ -32,11 +34,12 @@ class jenkinsData(object):
             return False
 
     def getTestReport(self, job, buildNum):
-        url = 'https://%s:%s@%s/job/%s/%s/testReport/api/json' % (self.user,
-                                                                  self.token,
-                                                                  self.host,
-                                                                  job,
-                                                                  buildNum)
+        url = '%s://%s:%s@%s/job/%s/%s/testReport/api/json' % (self.transport,
+                                                               self.user,
+                                                               self.token,
+                                                               self.host,
+                                                               job,
+                                                               buildNum)
         req = requests.get(url, verify=False)
         if req.status_code == 200:
             data = json.loads(req.text)
