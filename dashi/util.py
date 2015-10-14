@@ -132,7 +132,7 @@ class jobPoller(object):
             sleep(self.jenkins_poll_interval)
             result = []
             for host in self.config['jenkins']:
-                print 'jenkins poll'
+                print 'jenkins poll %s' % (host['host'])
                 _jenkins_data = jenkinsData(host)
                 result.extend(_jenkins_data.getLastResult())
 
