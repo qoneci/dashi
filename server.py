@@ -18,8 +18,11 @@ def result_handler():
         result = _redis.get('jenkins-result')
         if not result:
             print 'no redis data found!'
-            _jenkins_data = jenkinsData(config)
-            result = _jenkins_data.getLastResult()
+            result = []
+            for host in config['jenkins']:
+                print 'jenkins poll'
+                _jenkins_data = jenkinsData(host)
+                result.extend(_jenkins_data.getLastResult())
 
         resp = Response(
             json.dumps(result),
