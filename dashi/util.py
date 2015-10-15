@@ -13,19 +13,19 @@ class jenkinsData(object):
     def __init__(self, config):
         requests.packages.urllib3.disable_warnings()
         self.config = config
-        self.host = config['jenkins']['host']
-        self.user = config['jenkins']['user']
-        self.token = config['jenkins']['token']
-        self.jobs = config['jenkins']['jobs']
-        self.transport = config['jenkins']['transport']
+        self.host = config['host']
+        self.user = config['user']
+        self.token = config['token']
+        self.jobs = config['jobs']
+        self.transport = config['transport']
+        self.base_url = '%s://%s:%s@%s/' % (self.transport,
+                                            self.user,
+                                            self.token,
+                                            self.host)
         self.data = []
 
     def lastCompleteBuild(self, job):
-        url = '%s://%s:%s@%s/job/%s/lastCompletedBuild/api/json' % (self.transport,
-                                                                    self.user,
-                                                                    self.token,
-                                                                    self.host,
-                                                                    job)
+        url = '%s/job/%s/lastCompletedBuild/api/json' % (self.base_url, job)
         req = requests.get(url, verify=False)
         if req.status_code == 200:
             data = json.loads(req.text)
@@ -34,12 +34,7 @@ class jenkinsData(object):
             return False
 
     def getTestReport(self, job, buildNum):
-        url = '%s://%s:%s@%s/job/%s/%s/testReport/api/json' % (self.transport,
-                                                               self.user,
-                                                               self.token,
-                                                               self.host,
-                                                               job,
-                                                               buildNum)
+        url = '%s/job/%s/%s/testReport/api/json' % (self.base_url, job, buildNum)
         req = requests.get(url, verify=False)
         if req.status_code == 200:
             data = json.loads(req.text)
@@ -126,7 +121,7 @@ class jobPoller(object):
     def __init__(self, config, redis_pool):
         self.config = config
         self.redis_expire_time = int(self.config['redis']['expire_time'])
-        self.jenkins_poll_interval = int(self.config['jenkins']['poll_interval'])
+        self.jenkins_poll_interval = int(self.config['poller']['poll_interval'])
         self.pool = redis_pool
 
     def jenkins(self):
@@ -135,9 +130,12 @@ class jobPoller(object):
         )
         while True:
             sleep(self.jenkins_poll_interval)
-            print 'jenkins poll'
-            _jenkins_data = jenkinsData(self.config)
-            result = _jenkins_data.getLastResult()
+            result = []
+            for host in self.config['jenkins']:
+                print 'jenkins poll %s' % (host['host'])
+                _jenkins_data = jenkinsData(host)
+                result.extend(_jenkins_data.getLastResult())
+
             _redis.set(
                 'jenkins-result',
                 result,

@@ -1,13 +1,25 @@
 # YAML
 
+poller:
+  poll_interval: 10
+
 jenkins:
-    host: "<hostname-or-ip>"
-    user: "<username>"
-    token: "<userToken>"
-    poll_interval: 10
-    transport: 'http'
-    jobs:
-        - {"job": "<jenkins-job-name>", "short": "<shorter job description>"}
+- host: "<hostname-or-ip>"
+  user: "<username>"
+  token: "<userToken>"
+  transport: 'http'
+  jobs:
+    - {"job": "<jenkins-job-name>", "short": "<shorter job description>"}
+    - {"job": "<jenkins-job-name>", "short": "<shorter job description>"}
+
+- host: "<hostname-or-ip>"
+  user: "<username>"
+  token: "<userToken>"
+  transport: 'https'
+  jobs:
+    - {"job": "<jenkins-job-name>", "short": "<shorter job description>"}
+    - {"job": "<jenkins-job-name>", "short": "<shorter job description>"}
+
 redis:
     host: "<hostname-or-ip>"
     port: 6379 
