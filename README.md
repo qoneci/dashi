@@ -1,6 +1,6 @@
 # dashi
 
-Jenkins Dashboard to display test results in cards. frontend written in React, current backend written i python
+Jenkins Dashboard to display test results in cards. frontend written in React, current backend written i python. tested with junit test reports. 
 
 install
 -------
