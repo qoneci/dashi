@@ -12,30 +12,28 @@ $ npm install -g bower
 $ bower install
 ```
 
-copy the example config to config.yaml and configure it to to your jenkins. point to a redis host
+copy the example config to config.yaml and configure it to to one or multiple Jenkins. point to a redis host, if you like to run with docker-compose set the host to redis
 ```bash
 $ cp example.config.yml config.yml
 ```
 
 run from shell
+you can access the webUI on http://\<host\>:3000
 --------------
 ```bash
 $ python server.py
 ```
 
-you can access the webUI on http://\<host\>:3000
-
-
 docker build
 ------------
-a docker container for the server.py will be built and tagged with dashi:web
+to build the container using the pre build base container use `make` for a full build container with `make fullbuild`
 ```bash
-$ ./docker-build.sh
+$ make
 ```
 
 docker run
 ----------
-this will start a docker stack with the server.py in a container, redis and a haproxy
+start docker, stack contains redis and a haproxy
 ```bash
 $ docker-compose up -d
 ```
