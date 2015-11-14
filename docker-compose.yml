@@ -1,5 +1,5 @@
 web:
-  image: dashi:web
+  image: dashi
   ports:
     - "3000:3000"
   links:
