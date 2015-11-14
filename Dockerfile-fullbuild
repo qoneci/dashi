@@ -1,7 +1,7 @@
 FROM debian:8
 MAINTAINER Alexander Brandstedt
 
-RUN apt-get update -y && apt-get upgrade -y && \
+RUN apt-get update -y && \
     apt-get install -y \
         nodejs-legacy \
         gcc \
