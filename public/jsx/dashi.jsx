@@ -3,38 +3,6 @@ dashboard for presentation of test results in this case from jenkins
 */
 var Col = ReactBootstrap.Col;
 
-var TimerSinceUpdate = React.createClass({
-    getInitialState: function() {
-      return {elapsed: 0};
-    },
-    componentDidMount: function() {
-      this.timer = setInterval(this.tick, 50);
-    },
-    componentWillUnmount: function() {
-      clearInterval(this.timer);
-    },
-    tick: function() {
-      this.setState({elapsed: new Date() - this.props.start});
-    },
-    render: function() {
-      var elapsed = Math.round(this.state.elapsed / 100);
-      var seconds = (elapsed / 10).toFixed(1);
-      return <p>{seconds}</p>;
-    }
-});
-
-var TimerBlock = React.createClass({
-  render: function() {
-    return (
-      <Col className='dashi-card-size dashi-card-white dashi-card-size-mid'>
-        <div className='dashi-card-text-timer'>
-          <TimerSinceUpdate start={Date.now()} />
-        </div>
-      </Col>
-    );
-  }
-});
-
 var ResultBlock = React.createClass({
   render: function() {
     return (
@@ -106,7 +74,6 @@ var ResultList = React.createClass({
       const navInstance = (
         <div className='container-fluid'>
           {resultNodes}
-          <TimerBlock />
         </div>
       );
       return (
