@@ -37,3 +37,20 @@ start docker, stack contains redis and a haproxy
 ```bash
 $ docker-compose up -d
 ```
+
+
+development env
+---------------
+the pre commmit hock is running flake8 tests post commit. if it fails
+the commit will abort and you will get flake8 data out that you need
+to fix pre commit.
+
+```bash
+$ pip install -r requirements.txt
+$ pre-commit install
+```
+
+manual test with pre-commit, this will run the hocks on all files.
+```bash
+$ pre-commit run --all-files
+```

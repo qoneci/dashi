@@ -1,0 +1,7 @@
+-   repo: git@github.com:pre-commit/pre-commit-hooks
+    sha: 0ff8620e03bf7acfb4dfdc86de14baf032c604f5
+    hooks:
+    -   id: flake8
+        args:
+        - --max-complexity=12
+        - --max-line-length=120
